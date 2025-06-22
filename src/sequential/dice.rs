@@ -1,20 +1,20 @@
 use std::vec::Vec;
 
 pub struct Dice {
-	values: Vec<i32>,
+	values: Vec<u32>,
 	current: usize,
 }
 
 impl Dice {
-	pub fn new(values: Vec<i32>) -> Dice {
+	pub fn new(values: Vec<u32>) -> Dice {
 		Dice { values, current: 0 }
 	}
 
-	pub fn current(&self) -> i32 {
+	pub fn current(&self) -> u32 {
 		self.values[self.current]
 	}
 
-	pub fn next(&mut self) -> (bool, i32) {
+	pub fn next(&mut self) -> (bool, u32) {
 		self.current += 1;
 		if self.current >= self.values.len() {
 			self.current = 0;

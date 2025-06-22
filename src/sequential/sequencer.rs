@@ -11,27 +11,22 @@ impl Sequencer {
 		Sequencer { dices }
 	}
 
-	pub fn create(source: Iter<i32>,count:usize) -> Sequencer {
-		let dice: Vec<i32> = source.cloned().collect();
-		
-		let mut vec=Vec::<Dice>::new();
-		
-		for _ in 0..count{
-			vec.push(Dice::new(dice.clone()));
-		}
+	pub fn create(source: Iter<u32>,count:usize) -> Sequencer {
+		let dice: Vec<u32> = source.cloned().collect();
+		let vec=(0..count).map(|_| Dice::new(dice.clone())).collect();
 
 		Sequencer::new(vec)
 	}
 
-	pub fn get_current(&self, buff: &mut [i32]) {
+	pub fn get_current(&self, buff: &mut [u32]) {
 		let iter = self.dices.iter().zip(buff.iter_mut());
 		for (d, b) in iter {
 			*b = d.current()
 		}
 	}
 
-	pub fn aggregate<T>(&self, f: impl Fn(&[i32]) -> T) -> T {
-		let mut arr = Vec::<i32>::new();
+	pub fn aggregate<T>(&self, f: impl Fn(&[u32]) -> T) -> T {
+		let mut arr = Vec::<u32>::new();
 		arr.resize(self.dices.len(), 0);
 		self.get_current(&mut arr);
 		f(&arr)
@@ -55,9 +50,9 @@ mod tests {
 
 	#[test]
 	fn test_create() {
-		let source = vec![0, 1, 2, 3, 4, 5];
+		let source = vec![0u32, 1, 2, 3, 4, 5];
 		let seq = Sequencer::create(source.iter(),2);
-		let mut buff = [0i32; 2];
+		let mut buff = [0u32; 2];
 
 		seq.get_current(&mut buff);
 		assert_eq!(buff, [0, 0]);
@@ -69,7 +64,7 @@ mod tests {
 		let b = Dice::new(vec![0, 1, 2, 3, 4, 5]);
 		let fixture = Sequencer::new(vec![a, b]);
 
-		let mut buff = [0i32; 2];
+		let mut buff = [0u32; 2];
 		fixture.get_current(&mut buff);
 		assert_eq!(buff, [1, 0]);
 	}
@@ -80,7 +75,7 @@ mod tests {
 		let b = Dice::new(vec![0, 1]);
 		let mut fixture = Sequencer::new(vec![a, b]);
 
-		let mut buff = [0i32; 2];
+		let mut buff = [0u32; 2];
 
 		fixture.get_current(&mut buff);
 		assert_eq!(buff, [1, 0]);
@@ -108,10 +103,10 @@ mod tests {
 		let b = Dice::new(vec![0, 1]);
 		let mut fixture = Sequencer::new(vec![a, b]);
 
-		let result = fixture.aggregate(|arr| arr.iter().sum::<i32>());
+		let result = fixture.aggregate(|arr| arr.iter().sum::<u32>());
 		assert_eq!(result, 1);
 
 		fixture.move_next();
-		assert_eq!(fixture.aggregate(|arr| arr.iter().sum::<i32>()), 2);
+		assert_eq!(fixture.aggregate(|arr| arr.iter().sum::<u32>()), 2);
 	}
 }
