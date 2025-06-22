@@ -1,2 +1,2 @@
-mod dice;
-mod sequencer;
+pub mod dice;
+pub mod sequencer;
