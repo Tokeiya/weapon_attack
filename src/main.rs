@@ -3,17 +3,14 @@ extern crate core;
 mod sequential;
 
 use std::collections::HashMap;
-use std::fs;
-use std::io::{Write,BufWriter};
-use std::sync::atomic::Ordering::SeqCst;
-use sequential::dice::Dice;
+//use std::io::{Write,BufWriter};
 use sequential::sequencer::Sequencer;
 
 
 
 fn main() {
 	let arr = vec![0, 1];
-	let mut seq = Sequencer::<24>::create(arr.iter());
+	let mut seq = Sequencer::create(arr.iter(),24);
 	let mut accum=HashMap::<i32,usize>::new();
 	
 	let mut result=[0usize;25];
@@ -30,7 +27,7 @@ fn main() {
 			accum.insert(idx,1);
 		}
 		
-		if(seq.move_next()){
+		if seq.move_next() {
 			break;
 		}
 	}
